@@ -12,7 +12,7 @@ int main() {
     for (int i { 0 }; i < 1'000'000; ++i) {
         d += sqrt(sin(i) * cos(i));
     }
-    
+
     auto end { high_resolution_clock ::now() };
     auto diff { end - start };
 
