@@ -2,7 +2,7 @@
 #include <chrono>
 
 using namespace std;
-using namespace chrono;
+using namespace std::chrono;
 
 int main() {
     const auto& timezone_db { get_tzdb() };
