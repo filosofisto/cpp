@@ -17,7 +17,13 @@ public:
 
 unsigned long long fat(unsigned char n)
 {
-    if (n == 1) return 1;
+    if (n <= 1) return 1;
+    return n * fat(n-1);
+}
+
+consteval unsigned long long constFat(unsigned char n)
+{
+    if (n <= 1) return 1;
     return n * fat(n-1);
 }
 
@@ -29,16 +35,22 @@ int main() {
     using std::chrono::duration;
 
     auto start { high_resolution_clock::now() };
-    unsigned long long constFat6 = Factorial<60>::value;
+    unsigned long long constFat = Factorial<60>::value;
     auto end { high_resolution_clock::now() };
     auto diff { end - start };
-    cout << constFat6 << " - const duration: " << duration<double, milli> { diff }.count() << "ms" << endl;
+    cout << constFat << " - const duration: " << duration<double, milli> { diff }.count() << "ms" << endl;
 
     start = high_resolution_clock::now();
-    unsigned long long oldFat6 = fat(10);
+    unsigned long long oldFat = fat(10);
     end = high_resolution_clock::now();
     diff = end - start;
-    cout << oldFat6 << " - old duration: " << duration<double, milli> { diff }.count() << "ms" << endl;
+    cout << oldFat << " - old duration: " << duration<double, milli> { diff }.count() << "ms" << endl;
+
+    start = high_resolution_clock::now();
+    unsigned long long constOldFat = fat(60);
+    end = high_resolution_clock::now();
+    diff = end - start;
+    cout << constOldFat << " - const old duration: " << duration<double, milli> { diff }.count() << "ms" << endl;
 
 
     return EXIT_SUCCESS;
