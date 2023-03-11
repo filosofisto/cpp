@@ -7,5 +7,5 @@ build_release/
 **/CTestTestfile.cmake
 **/CPackConfig.cmake
 **/cmake_install.cmake
-**/install_manifest.txt
+**/install_manifest.txts
 **/compile_commands.json
