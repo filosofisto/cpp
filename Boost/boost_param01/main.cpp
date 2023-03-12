@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
 {
     opt::options_description desc("All options");
     desc.add_options()
-        ("apples", opt::value<int>(), "how many apples do you have")
-        ("oranges", opt::value<int>(), "how many oranges do you have")
-        ("help", "produce help message");
+        ("apples,a", opt::value<int>()->default_value(5), "how many apples do you have")
+        ("oranges,o", opt::value<int>(), "how many oranges do you have")
+        ("help,h", "produce help message");
         
     if (argc < 2) {
         cout << desc << endl;
