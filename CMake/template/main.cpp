@@ -1,12 +1,13 @@
-#include <iostream>
+//#include <iostream>
 
-// import <iostream>
+import <iostream>;
 
 using namespace std;
 
 int main()
 {
-    cout << "Template" << endl;
+    // cout << "Template" << endl;
 
-    return EXIT_SUCCESS;
+    // return EXIT_SUCCESS;
+    return 0;
 }

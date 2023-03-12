@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.18.4)
 
-project(changeme)
+project(template)
 
 # Enforce C++20 standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Enforce gcc compiler
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILER /usr/bin/g++)
+#set(CMAKE_CXX_COMPILER clang++-13)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fmodules")
 
 # Enable Interproceural Optimization, when available
 include(CheckIPOSupported)
@@ -26,4 +32,19 @@ endif()
 # endif()    
 
 # Executable
-add_executable(changeme main.cpp)
+add_executable(template main.cpp)
+
+target_compile_options(template PRIVATE
+  -fmodules
+  #  -fimplicit-modules
+  #-fimplicit-module-maps
+)
+
+target_include_directories(template PRIVATE /usr/include/c++/10)
+
+target_link_options(template PRIVATE
+  -fmodules
+)
+
+target_precompile_headers(template PRIVATE <iostream>)
+
