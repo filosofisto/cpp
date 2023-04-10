@@ -1,3 +1,0 @@
-/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/build/CMakeFiles/rebuild_cache.dir
-/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/build/CMakeFiles/edit_cache.dir
-/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/build/CMakeFiles/thread02.dir
