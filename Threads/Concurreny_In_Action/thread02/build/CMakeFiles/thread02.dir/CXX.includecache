@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/accumulate_parallel.h
+thread
+-
+vector
+-
+numeric
+-
+
+/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/main.cpp
+iostream
+-
+vector
+-
+accumulate_parallel.h
+/home/debian/Dev/cpp/Threads/Concurreny_In_Action/thread02/accumulate_parallel.h
+
