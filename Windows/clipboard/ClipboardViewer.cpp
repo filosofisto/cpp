@@ -1,5 +1,10 @@
 #include "ClipboardViewer.h"
 
+ClipboardViewer::ClipboardViewer()
+{
+    onClipboardUpdate();
+}
+
 void ClipboardViewer::onClipboardUpdate()
 {
     if (OpenClipboard(nullptr)) {
@@ -31,12 +36,12 @@ void ClipboardViewer::showHistory() const
     unsigned int index = 0;
 
     std::cout << "------------------------------| Clipboard History |------------------------------\n";
-    std::cout << "Ctrl+Alt+1 ... Ctrl+Alt+9: Copy items from history to clipboard\n";
+    std::cout << "Ctrl+Alt+2 ... Ctrl+Alt+9: Copy items from history to clipboard\n";
     std::cout << "---------------------------------------------------------------------------------\n";
 
     for (auto& str : stack) {
         index++;
-        std::cout << "[" << index << "]:\n";
+        std::cout << "[" << index << "]:" << (index == 1 ? " Current clipboard content" : "") << "\n";
         std::cout << str << "\n";
         std::cout << "---------------------------------------------------------------------------------\n";
     }

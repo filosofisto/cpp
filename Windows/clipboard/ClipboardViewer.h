@@ -7,7 +7,7 @@
 class ClipboardViewer
 {
 public:
-	explicit ClipboardViewer() = default;
+	explicit ClipboardViewer();
 	virtual ~ClipboardViewer() = default;
 
 	void onClipboardUpdate();
