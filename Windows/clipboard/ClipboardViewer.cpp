@@ -7,27 +7,58 @@ ClipboardViewer::ClipboardViewer()
 
 void ClipboardViewer::onClipboardUpdate()
 {
-    if (OpenClipboard(nullptr)) {
-        HANDLE hClipboardData = GetClipboardData(CF_TEXT);
-        if (hClipboardData != nullptr) {
-            char* pszText = static_cast<char*>(GlobalLock(hClipboardData));
-            if (pszText != nullptr) {
+    try {
+         clipboard.open();
+
+        if (clipboard.isText()) {
+            const std::string text = clipboard.currentText();
+            
+            if (isCurrentClipboardValid()) {
+                // Normal case: Check if need to adjust the history buffer and add it on the history
                 adjustStackIfLimitAchieved();
-                addOnHistory(std::string{ pszText });
-                showHistory();
+                addOnHistory(text);
+               
+            }
+            else {
+                // Special case: If current clipboard data is not text then simply replace it by the new text
+                 replaceCurrentClipboardWith(text);
+            }
+        }
+        else {
+            // No Text added to clipboard:
+            //      If current clipboard is TEXT:
+            //          add on clipboard the NO_TEXT item to history
+            //      else (* It means already exist a Non Text on clipboard, so to avoid polute the history with no text data just replace the current one with NO_TEXT *)
+            if (isCurrentClipboardValid()) {
+                adjustStackIfLimitAchieved();
+                addOnHistory(std::string{ });
             }
 
-            GlobalUnlock(hClipboardData);
+            replaceCurrentClipboardWithInvalid();
         }
-        CloseClipboard();
+
+        showHistory();
     }
+    catch (const ClipboardException& e) {
+        std::cerr << "Error on process clipboard update: " << e.what() << "\n";
+    }
+        
+    clipboard.close();
 }
 
 void ClipboardViewer::handleHotkey(int hotkeyId)
 {
+    // Ctrl+Alt+0 clear the history cache
+    if (hotkeyId == 0) {
+        clearHistory();
+        return;
+    }
+
+    // Ctrl+Alt+N where there is no N position in the cache must be ignored
     if (hotkeyId > stack.size()) return;
 
-    setClipboardText(stack[hotkeyId - 1]);
+    // Set the position in the history the current clipboard
+    setClipboardText(stack[hotkeyId - 1].content);
 }
 
 void ClipboardViewer::showHistory() const
@@ -37,18 +68,21 @@ void ClipboardViewer::showHistory() const
 
     std::cout << "------------------------------| Clipboard History |------------------------------\n";
     std::cout << "Ctrl+Alt+2 ... Ctrl+Alt+9: Copy items from history to clipboard\n";
+    std::cout << "Ctrl+Alt+0     Clear history (reset to the current clipboard content\n";
     std::cout << "---------------------------------------------------------------------------------\n";
 
     for (auto& str : stack) {
         index++;
         std::cout << "[" << index << "]:" << (index == 1 ? " Current clipboard content" : "") << "\n";
-        std::cout << str << "\n";
+        std::cout << str.content << "\n";
         std::cout << "---------------------------------------------------------------------------------\n";
     }
 }
 
 void ClipboardViewer::adjustStackIfLimitAchieved()
 {
+    if (!isCurrentClipboardValid()) return;
+
     while (stack.size() >= LIMIT) {
         stack.pop_back();
     }
@@ -56,38 +90,44 @@ void ClipboardViewer::adjustStackIfLimitAchieved()
 
 void ClipboardViewer::addOnHistory(const std::string& text)
 {
-    stack.insert(stack.begin(), text);
+    stack.insert(stack.begin(), ClipboardItem{true, text});
 }
 
-void ClipboardViewer::setClipboardText(const std::string& text) const
+void ClipboardViewer::setClipboardText(const std::string& text)
 {
-    if (OpenClipboard(nullptr)) {
-        EmptyClipboard();
+    try {
+        clipboard.open();
+        clipboard.set(text);
+    }
+    catch (const ClipboardException& e) {
+        std::cerr << "Error on try to set text on clipboard: " << e.what() << "\n";
+    }
 
-        // Allocate global memory for the string
-        HGLOBAL hClipboardData = GlobalAlloc(GMEM_MOVEABLE, text.size() + 1);
+    clipboard.close();
+}
 
-        if (hClipboardData != nullptr) {
-            // Lock the memory and copy the string
-            char* pszText = static_cast<char*>(GlobalLock(hClipboardData));
-            if (pszText != nullptr) {
-                strcpy_s(pszText, text.size() + 1, text.c_str());
-                GlobalUnlock(hClipboardData);
+void ClipboardViewer::replaceCurrentClipboardWithInvalid()
+{
+    stack[0] = ClipboardItem{ false, NON_VALID_CONTENT };
+}
 
-                // Set clipboard data format (CF_TEXT)
-                SetClipboardData(CF_TEXT, hClipboardData);
-            }
-            else {
-                std::cerr << "Error locking memory for clipboard text." << std::endl;
-            }
-        }
-        else {
-            std::cerr << "Error allocating memory for clipboard text." << std::endl;
-        }
-
-        CloseClipboard();
+void ClipboardViewer::replaceCurrentClipboardWith(const std::string& text)
+{
+    if (!stack.empty()) {
+        stack[0] = ClipboardItem{ true, text };
     }
     else {
-        std::cerr << "Error opening the clipboard." << std::endl;
+        addOnHistory(text);
     }
+}
+
+bool ClipboardViewer::isCurrentClipboardValid() const
+{
+    return !stack.empty() && stack[0].valid;
+}
+
+void ClipboardViewer::clearHistory()
+{
+    stack.clear();
+    onClipboardUpdate();
 }

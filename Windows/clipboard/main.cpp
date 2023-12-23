@@ -16,7 +16,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         }
 
         // Register hotkeys (Ctrl+Alt+1 through Ctrl+Alt+9)
-        for (int i = 2; i <= 9; ++i) {
+        for (int i = 0; i <= 9; ++i) {
+            if (i == 1) continue; // Ignore Ctrl+Alt+1
             if (!RegisterHotKey(hwnd, i, MOD_ALT | MOD_CONTROL, '0' + i)) {
                 std::cerr << "Error registering hotkey " << i << ". Error code: " << GetLastError() << std::endl;
                 return -1;
@@ -29,7 +30,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         RemoveClipboardFormatListener(hwnd);
 
         // Unregister hotkeys
-        for (int i = 2; i <= 9; ++i) {
+        for (int i = 0; i <= 9; ++i) {
+            if (i == 1) continue; // Ignore Ctrl+Alt+1
             UnregisterHotKey(hwnd, i);
         }
 

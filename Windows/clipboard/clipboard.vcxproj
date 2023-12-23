@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClipBoardException.cpp" />
     <ClCompile Include="ClipboardViewer.cpp" />
+    <ClCompile Include="ClipboardWrapper.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClipboardException.h" />
     <ClInclude Include="ClipboardViewer.h" />
+    <ClInclude Include="ClipboardWrapper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
