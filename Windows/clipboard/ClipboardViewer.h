@@ -20,6 +20,8 @@ public:
 
 	void onClipboardUpdate();
 	void handleHotkey(int hotkeyId);
+	void registerHotKeys(HWND hwnd);
+	void unregisterHotKeys(HWND hwnd);
 
 private:
 	const unsigned int LIMIT = 9;

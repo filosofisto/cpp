@@ -61,6 +61,25 @@ void ClipboardViewer::handleHotkey(int hotkeyId)
     setClipboardText(stack[hotkeyId - 1].content);
 }
 
+void ClipboardViewer::registerHotKeys(HWND hwnd)
+{
+    for (int i = 0; i <= 9; ++i) {
+        if (i == 1) continue; // Ignore Ctrl+Alt+1
+        if (!RegisterHotKey(hwnd, i, MOD_ALT | MOD_CONTROL, '0' + i)) {
+            throw ClipboardException("Error registering hotkey");
+        }
+    }
+}
+
+void ClipboardViewer::unregisterHotKeys(HWND hwnd)
+{
+    // Unregister hotkeys
+    for (int i = 0; i <= 9; ++i) {
+        if (i == 1) continue; // Ignore Ctrl+Alt+1
+        UnregisterHotKey(hwnd, i);
+    }
+}
+
 void ClipboardViewer::showHistory() const
 {
     system("cls");
