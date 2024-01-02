@@ -24,7 +24,7 @@
     <ClCompile Include="ClipboardWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClipBoardException.cpp">
+    <ClCompile Include="ClipboardException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
